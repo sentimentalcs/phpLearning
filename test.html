@@ -1,0 +1,27 @@
+<script>
+
+var arr = [20,60,70,130];
+var obj = {};
+function mt_rand(n,m){
+	 return rand = Math.floor(Math.random()*(m-n+1)+n);
+}
+var total = 100000;
+for(var i = 0 ; i < total; i++){
+	var rand_num = mt_rand(1,130);
+	for(var j = 0 ; j < arr.length;j++){
+		if(rand_num <= arr[j]){
+			prize = arr[j];
+			if(obj[prize]){
+				obj[prize]+=1;
+			}else{
+				obj[prize] = 1;
+			}
+			break;
+		}
+	}
+}
+for(var name in obj){
+	obj[name] = obj[name]/total*100;
+}
+console.log(obj);
+</script>
