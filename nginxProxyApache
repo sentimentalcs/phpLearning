@@ -1,0 +1,36 @@
+server
+        {
+                listen 80;
+                #listen [::]:80;
+                server_name advert.chindor.com;
+                index index.html index.htm index.php default.html default.htm default.php;
+                root  /home/wwwroot/default/advert_online/basic;
+
+                location / {
+                        try_files $uri @apache;
+                        }
+
+                location @apache {
+                        internal;
+                        proxy_pass http://127.0.0.1:88;
+                        include proxy.conf;
+                        }
+
+                location ~ [^/]\.php(/|$)
+                        {
+                                proxy_pass http://127.0.0.1:88;
+                                include proxy.conf;
+                        }
+
+                location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+                        {
+                                expires      30d;
+                        }
+
+                location ~ .*\.(js|css)?$
+                        {
+                                expires      12h;
+                        }
+
+                access_log  /home/wwwlogs/advert.chindor.com.log  access;
+        }
