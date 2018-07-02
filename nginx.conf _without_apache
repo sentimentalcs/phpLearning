@@ -1,0 +1,44 @@
+server {
+    listen 80;
+    server_name ahwyx.com;
+    access_log /data/wwwlogs/access_nginx.log combined;
+    root /data/wwwroot/default/advert/basic;
+    index index.html index.htm index.php;
+    #error_page 404 /404.html;
+    #error_page 502 /502.html;
+    error_log  /nginx_erro_logs/ahwyx.com  error;
+    location /nginx_status {
+      stub_status on;
+      access_log off;
+      allow 127.0.0.1;
+      deny all;
+    }
+    location = / {
+        rewrite ^/(.*) http://ahwyx.com/wap/index.html  last;
+    }
+
+    location /api{
+        if (!-e $request_filename){
+            rewrite ^/(.*) /api/index.php last;
+        }
+    }
+
+
+    location ~ [^/]\.php(/|$) {
+      #fastcgi_pass remote_php_ip:9000;
+      fastcgi_pass unix:/dev/shm/php-cgi.sock;
+      fastcgi_index index.php;
+      include fastcgi.conf;
+    }
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf|flv|mp4|ico)$ {
+      expires 30d;
+      access_log off;
+    }
+    location ~ .*\.(js|css)?$ {
+      expires 7d;
+      access_log off;
+    }
+    location ~ /\.ht {
+      deny all;
+    }
+  }
